@@ -39,6 +39,7 @@ darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
 darcs-dev /extensions/AccelerationStructures fh.daimi.au.dk:/users/cgd/code/extensions/AccelerationStructures
 darcs-dev /extensions/HeightMap              fh.daimi.au.dk:/users/cgd/code/extensions/HeightMap
+darcs-dev /extensions/TexUtils               fh.daimi.au.dk:/users/cgd/code/extensions/TexUtils
 darcs-dev /extensions/RBPhysics              fh.daimi.au.dk:/users/cgd/code/extensions/RBPhysics
 darcs-dev /extensions/MeshUtils              fh.daimi.au.dk:/users/cgd/code/extensions/MeshUtils
 darcs-dev /extensions/OpenGLSelection              fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
