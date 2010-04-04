@@ -23,6 +23,7 @@ darcs /extensions/OBJResource            http://openengine.dk/code/extensions/OB
 darcs /extensions/AccelerationStructures http://openengine.dk/code/extensions/AccelerationStructures
 darcs /extensions/HeightMap              http://openengine.dk/code/extensions/HeightMap
 darcs /extensions/TexUtils              http://openengine.dk/code/extensions/TexUtils
+darcs /extensions/RBPhysics              http://openengine.dk/code/extensions/RBPhysics
 
 
 darcs-dev /extensions/ActionMappers          fh.daimi.au.dk:/users/cgd/code/extensions/ActionMappers
@@ -36,6 +37,7 @@ darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
 darcs-dev /extensions/AccelerationStructures fh.daimi.au.dk:/users/cgd/code/extensions/AccelerationStructures
 darcs-dev /extensions/HeightMap              fh.daimi.au.dk:/users/cgd/code/extensions/HeightMap
+darcs-dev /extensions/RBPhysics              fh.daimi.au.dk:/users/cgd/code/extensions/RBPhysics
 
 # windows libraries
 win32 /libraries http://openengine.dk/data/libraries/boost-win32.zip
