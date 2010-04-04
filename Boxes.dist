@@ -22,8 +22,10 @@ darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TG
 darcs /extensions/OBJResource            http://openengine.dk/code/extensions/OBJResource
 darcs /extensions/AccelerationStructures http://openengine.dk/code/extensions/AccelerationStructures
 darcs /extensions/HeightMap              http://openengine.dk/code/extensions/HeightMap
-darcs /extensions/TexUtils              http://openengine.dk/code/extensions/TexUtils
+darcs /extensions/TexUtils               http://openengine.dk/code/extensions/TexUtils
 darcs /extensions/RBPhysics              http://openengine.dk/code/extensions/RBPhysics
+darcs /extensions/MeshUtils              http://openengine.dk/code/extensions/MeshUtils
+darcs /extensions/OpenGLSelection        http://openengine.dk/code/extensions/OpenGLSelection
 
 
 darcs-dev /extensions/ActionMappers          fh.daimi.au.dk:/users/cgd/code/extensions/ActionMappers
@@ -38,6 +40,8 @@ darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/AccelerationStructures fh.daimi.au.dk:/users/cgd/code/extensions/AccelerationStructures
 darcs-dev /extensions/HeightMap              fh.daimi.au.dk:/users/cgd/code/extensions/HeightMap
 darcs-dev /extensions/RBPhysics              fh.daimi.au.dk:/users/cgd/code/extensions/RBPhysics
+darcs-dev /extensions/MeshUtils              fh.daimi.au.dk:/users/cgd/code/extensions/MeshUtils
+darcs-dev /extensions/OpenGLSelection              fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
 
 # windows libraries
 win32 /libraries http://openengine.dk/data/libraries/boost-win32.zip
