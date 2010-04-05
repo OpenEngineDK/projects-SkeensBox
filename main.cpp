@@ -71,7 +71,9 @@ using namespace OpenEngine::Renderers::OpenGL;
 
 
 // config
+
 Vector<2,float> hmapsize(33,33);
+//Vector<2,float> hmapsize(64,64);
 //Vector<2,float> hmapsize(193,193);
 
 class KeyArg {
@@ -246,7 +248,7 @@ int main(int argc, char** argv) {
 
     root->AddNode(tn);
     root->AddNode(tn2);
-    root->AddNode(phy->getRenderNode(&(setup->GetRenderer())));
+    //root->AddNode(phy->getRenderNode(&(setup->GetRenderer())));
 
 
     Camera* cam = setup->GetCamera();
@@ -300,21 +302,23 @@ int main(int argc, char** argv) {
 
 HeightMapNode* SetupTerrain(SimpleSetup* setup, PhysicsFacade* phy) {
     //FloatTexture2DPtr map = FloatTexture2DPtr(new FloatTexture2D(193, 193, 1));    
-    // FloatTexture2DPtr map = FloatTexture2DPtr(new FloatTexture2D(hmapsize[0], hmapsize[1], 1));
+    FloatTexture2DPtr map = FloatTexture2DPtr(new FloatTexture2D(hmapsize[0], hmapsize[1], 1));
     // //UCharTexture2DPtr map1 = ResourceManager<UCharTexture2D>::Create("Heightmap32.tga");
     // //FloatTexture2DPtr map = ConvertTex(map1);
-    // Empty(map);
+    Empty(map);
     // map = CreateSmoothTerrain(map, 50, 40, 200);
 
 
-    //map = CreateSmoothTerrain(map, 1, 160, 300);
-    //map = CreateSmoothTerrain(map, 25, 20, 60);
-    // map = CreateSmoothTerrain(map, 125, 5, 40);
-    // map = CreateSmoothTerrain(map, 250, 3, -6);
-    // map = CreateSmoothTerrain(map, 625, 2, 3);
-    //map = MakePlateau(map, 700, 30);
+    map = CreateSmoothTerrain(map, 1, 160, 300);
+    map = CreateSmoothTerrain(map, 25, 20, 60);
+    map = CreateSmoothTerrain(map, 125, 5, 40);
+    map = CreateSmoothTerrain(map, 250, 3, -6);
+    map = CreateSmoothTerrain(map, 625, 2, 3);
+    map = MakePlateau(map, 700, 30);
 
-    FloatTexture2DPtr map = PerlinNoise::Generate(4, 128, 2, 0.5, 10, 4, 0);
+    map = PerlinNoise::Generate(hmapsize[0]/4,
+                                hmapsize[1]/4,
+                                512, 2, 1.0, 10, 4, 0);
 
     
     float widthScale = 16.0;
