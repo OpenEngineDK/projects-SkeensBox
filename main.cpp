@@ -320,7 +320,8 @@ HeightMapNode* SetupTerrain(SimpleSetup* setup, PhysicsFacade* phy) {
                                 hmapsize[1]/4,
                                 512, 2, 1.0, 10, 4, 0);
 
-    
+    PerlinNoise::Normalize(map, 0, 1024);
+
     float widthScale = 16.0;
 
     Vector<3, float> origo = Vector<3, float>(map->GetHeight() * widthScale / 2, 
