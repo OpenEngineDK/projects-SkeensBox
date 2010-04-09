@@ -316,9 +316,10 @@ HeightMapNode* SetupTerrain(SimpleSetup* setup, PhysicsFacade* phy) {
     map = CreateSmoothTerrain(map, 625, 2, 3);
     map = MakePlateau(map, 700, 30);
 
-    map = PerlinNoise::Generate(hmapsize[0]/4,
-                                hmapsize[1]/4,
-                                512, 2, 1.0, 10, 4, 0);
+
+    map = PerlinNoise::Generate(hmapsize[0],
+                                hmapsize[1],
+                                512, 0.5, 1.0, 10, 1/4, 0);
 
     PerlinNoise::Normalize(map, 0, 1024);
 
