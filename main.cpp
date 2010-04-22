@@ -248,7 +248,7 @@ int main(int argc, char** argv) {
 
     root->AddNode(tn);
     root->AddNode(tn2);
-    //root->AddNode(phy->getRenderNode(&(setup->GetRenderer())));
+    root->AddNode(phy->getRenderNode(&(setup->GetRenderer())));
 
 
     Camera* cam = setup->GetCamera();
@@ -337,9 +337,15 @@ HeightMapNode* SetupTerrain(SimpleSetup* setup, PhysicsFacade* phy) {
     setup->GetEngine().ProcessEvent().Attach(*node);
     
     setup->GetScene()->AddNode(node);
+    node->Load();
 
+    logger.info << hmapsize << logger.end;
+    logger.info << node->GetVerticeWidth() << logger.end;
+    logger.info << node->GetVerticeDepth() << logger.end;
         
-    HeightfieldTerrainShape* hground = new HeightfieldTerrainShape(map,
+    HeightfieldTerrainShape* hground = new HeightfieldTerrainShape(node->GetVertexBuffer(),
+                                                                   node->GetVerticeWidth(),
+                                                                   node->GetVerticeDepth(),
                                                                    1000,
                                                                    16,
                                                                    1,
@@ -347,10 +353,10 @@ HeightMapNode* SetupTerrain(SimpleSetup* setup, PhysicsFacade* phy) {
                                                                    true);
     RigidBody* gnd = new RigidBody(hground);
     gnd->SetRotation(Quaternion<float>(0,-PI/2,0));
-    gnd->SetPosition(Vector<3,float>(16*hmapsize[0]/2 - 16/2,
-                                     -8+1000/2,
-                                     16*hmapsize[1]/2 - 16/2
-                                     ));
+     gnd->SetPosition(Vector<3,float>(16*hmapsize[0]/2 - 16/2,
+                                      1000/2,
+                                      16*hmapsize[1]/2 - 16/2
+                                      ));
 
     phy->AddRigidBody(gnd);
 
