@@ -30,7 +30,7 @@
 #include <Scene/PointLightNode.h>
 
 #include <Utils/SimpleSetup.h>
-#include <Utils/PerlinNoise.h>
+//#include <Utils/ValueNoise.h>
 #include <Utils/MeshUtils.h>
 #include <Utils/CameraTool.h>
 #include <Utils/ToolChain.h>
@@ -38,6 +38,7 @@
 #include <Utils/ActionCallback.h>
 #include <Utils/TerrainUtils.h>
 #include <Utils/TerrainTexUtils.h>
+#include <Utils/MeshCreator.h>
 
 #include <Devices/KeyboardActionMapper.h>
 
@@ -94,7 +95,7 @@ Vector<3,float> RandomVector(RandomGenerator* rg,
                            rg->UniformFloat(min[2],max[2]));
 }
 
-class ActionHandler : public IListener<ProcessEventArg> {
+class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg> {
     
     ISceneNode* root;
     PhysicsFacade* phy;
@@ -114,7 +115,7 @@ public:
     }
 
 
-    void Handle (ProcessEventArg arg) {
+    void Handle (OpenEngine::Core::ProcessEventArg arg) {
         if (dropTimer.GetElapsedIntervals(300000) >= 1) {
             dropTimer.Reset();
             DropBox();
@@ -148,9 +149,11 @@ public:
 
 
         MeshNode *mn = new MeshNode();
-        mn->SetMesh(CreateCube(boxSize*2,RandomVector(rg,
-                                               Vector<3,float>(),
-                                               Vector<3,float>(1)),1));
+        mn->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(
+											  boxSize*2,
+											  1,
+											  RandomVector(rg, Vector<3,float>(), Vector<3,float>(1))
+											  ,1));
 
         TransformationNode* tn = body->GetTransformationNode();
         tn->AddNode(mn);
@@ -176,10 +179,7 @@ int main(int argc, char** argv) {
     // Create simple setup
     IEnvironment* env = new SDLEnvironment(800,600);
 
-    Viewport* vp = new Viewport(env->GetFrame());
-    IRenderingView* rv = new TerrainRenderingView(*vp);
-
-    SimpleSetup* setup = new SimpleSetup("Boxiii",vp,env,rv);
+    SimpleSetup* setup = new SimpleSetup("Boxiii", env);
 
     // Print usage info.
     logger.info << "========= Running OpenEngine Test Project =========" << logger.end;
@@ -212,10 +212,10 @@ int main(int argc, char** argv) {
     HeightMapNode* hmapn = SetupTerrain(setup,phy);
 
     MeshNode *mn = new MeshNode();
-    mn->SetMesh(CreateCube(10,Vector<3,float>(1,0,0),1));
+    mn->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(10,1,Vector<3,float>(1,0,0),1));
 
     MeshNode *mn2 = new MeshNode();
-    mn2->SetMesh(CreateCube(10,Vector<3,float>(1,0,0),1));
+    mn2->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(10,1,Vector<3,float>(1,0,0),1));
 
     RigidBody* ground = new RigidBody(new AABB(Vector<3,float>(),
                                                Vector<3,float>(100,1,100)));
@@ -276,6 +276,7 @@ int main(int argc, char** argv) {
     plt->SetPosition(Vector<3,float>(0,1000,0));
     root->AddNode(plt);
     // mouse tools
+	/*
     MouseSelection* ms = new MouseSelection(setup->GetFrame(), setup->GetMouse(), NULL);
     CameraTool* ct   = new CameraTool();
     ToolChain* tc    = new ToolChain();
@@ -287,7 +288,7 @@ int main(int argc, char** argv) {
     setup->GetKeyboard().KeyEvent().Attach(*ms);
 
     ms->BindTool(&(setup->GetRenderer().GetViewport()), tc);
-
+	*/
 
     setup->ShowFPS();
 
@@ -317,11 +318,11 @@ HeightMapNode* SetupTerrain(SimpleSetup* setup, PhysicsFacade* phy) {
     map = MakePlateau(map, 700, 30);
 
 
-    map = PerlinNoise::Generate(hmapsize[0],
+    /*map = ValueNoise::Generate(hmapsize[0],
                                 hmapsize[1],
                                 512, 0.5, 1.0, 10, 1/4, 0);
-
-    PerlinNoise::Normalize(map, 0, 1024);
+*/
+    //ValueNoise::Normalize(map, 0, 1024);
 
     float widthScale = 16.0;
 
