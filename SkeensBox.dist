@@ -14,6 +14,8 @@ dist /extensions/SetupHelpers/SetupHelpers.dist http://openengine.dk/code/extens
 dist /extensions/CairoResource/CairoResource.dist http://openengine.dk/code/extensions/CairoResource/CairoResource.dist
 dist /extensions/HeightMap/HeightMap.dist http://openengine.dk/code/extensions/HeightMap/HeightMap.dist
 dist /extensions/TexUtils/TexUtils.dist http://openengine.dk/code/extensions/TexUtils/TexUtils.dist
+dist /extensions/Assimp/Assimp.dist               http://www.openengine.dk/code/extensions/Assimp/Assimp.dist
+
 
 # old style
 darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TGAResource

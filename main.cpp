@@ -37,7 +37,6 @@
 #include <Resources/AssimpResource.h>
 
 #include <Utils/SimpleSetup.h>
-#include <Utils/ValueNoise.h>
 #include <Utils/MeshUtils.h>
 #include <Utils/CameraTool.h>
 #include <Utils/ToolChain.h>
