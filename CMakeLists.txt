@@ -7,11 +7,6 @@ SET( PROJECT_SOURCES
   main.cpp
 )
 
-# Include needed to use SDL under Mac OS X
-IF(APPLE)
-  SET(PROJECT_SOURCES ${PROJECT_SOURCES}  ${SDL_MAIN_FOR_MAC})
-ENDIF(APPLE)
-
 # Project executable
 ADD_EXECUTABLE(${PROJECT_NAME}
   ${PROJECT_SOURCES}
