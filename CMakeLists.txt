@@ -33,4 +33,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
   Extensions_RBPhysics
   Extensions_MeshUtils
   Extensions_OpenGLSelection
+  Extensions_GenericHandlers
+  Extensions_AssimpResource
 )
+

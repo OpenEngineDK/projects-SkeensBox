@@ -7,12 +7,16 @@
 // See the GNU General Public License for more details (see LICENSE). 
 //--------------------------------------------------------------------
 
+// 
+// No time for Havoc! - Its time for bullet(s)
+// This engine is like unreal! *TEARS THE ENGINE APART* now its open engine
+// 
+
 // OpenEngine stuff
 #include <Meta/Config.h>
 #include <Logging/Logger.h>
 #include <Logging/StreamLogger.h>
 #include <Core/Engine.h>
-
 
 #include <Physics/PhysicsFacade.h>
 #include <Physics/RigidBody.h>
@@ -29,8 +33,11 @@
 #include <Scene/SunNode.h>
 #include <Scene/PointLightNode.h>
 
+// Assimp
+#include <Resources/AssimpResource.h>
+
 #include <Utils/SimpleSetup.h>
-//#include <Utils/ValueNoise.h>
+#include <Utils/ValueNoise.h>
 #include <Utils/MeshUtils.h>
 #include <Utils/CameraTool.h>
 #include <Utils/ToolChain.h>
@@ -39,25 +46,16 @@
 #include <Utils/TerrainUtils.h>
 #include <Utils/TerrainTexUtils.h>
 #include <Utils/MeshCreator.h>
-
-#include <Devices/KeyboardActionMapper.h>
+#include <Utils/BetterMoveHandler.h>
 
 #include <Display/Camera.h>
 #include <Display/SDLEnvironment.h>
 
 #include <Math/RandomGenerator.h>
 
-#include <Renderers/OpenGL/TerrainRenderingView.h>
-
 #include <Resources/ResourceManager.h>
 #include <Resources/SDLImage.h>
 
-// Game factory
-//#include "GameFactory.h"
-
-// name spaces that we will be using.
-// this combined with the above imports is almost the same as
-// fx. import OpenEngine.Logging.*; in Java.
 using namespace OpenEngine::Logging;
 using namespace OpenEngine::Core;
 using namespace OpenEngine::Utils;
@@ -72,31 +70,20 @@ using namespace OpenEngine::Renderers::OpenGL;
 
 
 // config
-
 Vector<2,float> hmapsize(33,33);
-//Vector<2,float> hmapsize(64,64);
-//Vector<2,float> hmapsize(193,193);
 
-class KeyArg {
-public:
-    ButtonEvent type;
-    KeyArg(ButtonEvent t) : type(t) {}
-};
-
-class KeyActionMap : public KeyboardActionMapper<KeyArg> {
-    KeyArg toAction(KeyboardEventArg arg) { return KeyArg(arg.type); }
-};
-
+//Get a random vector within min-->max using the randomGen rg.
 Vector<3,float> RandomVector(RandomGenerator* rg,
                              Vector<3,float> min,
-                             Vector<3,float> max) {
+                             Vector<3,float> max)
+{
     return Vector<3,float>(rg->UniformFloat(min[0],max[0]),
                            rg->UniformFloat(min[1],max[1]),
                            rg->UniformFloat(min[2],max[2]));
 }
 
-class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg> {
-    
+class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg>
+{
     ISceneNode* root;
     PhysicsFacade* phy;
     Vector<3,float> start;
@@ -104,78 +91,66 @@ class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg> {
     Timer dropTimer;
 public:
     ActionHandler(ISceneNode* root,
-                      PhysicsFacade* phy,
-                      Vector<3,float> p)
-        : root(root)
-        , phy(phy)
-        , start(p)
-        , rg(new RandomGenerator())
+                  PhysicsFacade* phy,
+                  Vector<3,float> p)
+        : root(root), phy(phy), start(p), rg(new RandomGenerator())
     {
         rg->SeedWithTime();
+		dropTimer.Start();
     }
 
 
-    void Handle (OpenEngine::Core::ProcessEventArg arg) {
-        if (dropTimer.GetElapsedIntervals(300000) >= 1) {
+    void Handle (OpenEngine::Core::ProcessEventArg arg)
+	{
+        if((dropTimer.GetElapsedTime().AsInt()) >= 30000)
+		{
             dropTimer.Reset();
             DropBox();
         }
     }
 
-    void ToggleAuto(KeyArg arg) {
-        logger.info << "toggle auto" << logger.end;
-        if (dropTimer.IsRunning())
-            dropTimer.Stop();
-        else
-            dropTimer.Start();
-    }
-
-    void NewBox(KeyArg arg) {
-        DropBox();
-    }
-    void DropBox() {
-        const float boxSize = 50;        
-        float mass = rg->UniformFloat(1.0, 1000.0);
+    void DropBox()
+	{
+        const float boxSize = 10;        
+        float mass = rg->UniformFloat(100, 500);
         logger.info << "Box: " << mass << logger.end;
-        RigidBody* body = new RigidBody(new AABB(Vector<3,float>(),
+
+        MeshNode *mn = new MeshNode();
+        mn->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(boxSize*2,1,RandomVector(rg, Vector<3,float>(), Vector<3,float>(1)),1));
+		RigidBody* body = new RigidBody(new AABB(Vector<3,float>(),
                                                  Vector<3,float>(boxSize)));
         DynamicBody* db = new DynamicBody(body);
         db->SetPosition(start + RandomVector(rg,
-                                             Vector<3,float>(-2,20,-2)*boxSize,
-                                             Vector<3,float>(2,40,2)*boxSize));
+                                             Vector<3,float>(-10,20,-10)*boxSize,
+                                             Vector<3,float>(10,40,10)*boxSize));
         db->SetMass(mass);
-        
         phy->AddRigidBody(db);
-
-
-        MeshNode *mn = new MeshNode();
-        mn->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(
-											  boxSize*2,
-											  1,
-											  RandomVector(rg, Vector<3,float>(), Vector<3,float>(1))
-											  ,1));
 
         TransformationNode* tn = body->GetTransformationNode();
         tn->AddNode(mn);
-
         root->AddNode(tn);
-
     }
 };
 
-HeightMapNode* SetupTerrain(SimpleSetup*, 
-                            PhysicsFacade* );
+ISceneNode* CreateDuck()
+{
+    IModelResourcePtr duckRes = ResourceManager<IModelResource>::Create("duck/duck.dae");
+    duckRes->Load();
+	
+	ISceneNode *duck = duckRes->GetSceneNode();
 
-/**
- * Main method for the first quarter project of CGD.
- * Corresponds to the
- *   public static void main(String args[])
- * method in Java.
- */
-int main(int argc, char** argv) {
+    duckRes->Unload();
+	return duck;
+}
+
+
+int main(int argc, char** argv)
+{
     ResourceManager<UCharTexture2D>::AddPlugin(new UCharSDLImagePlugin());
-    DirectoryManager::AppendPath("projects/Boxes/data/");
- // Setup logging facilities.
+    ResourceManager<IModelResource>::AddPlugin(new AssimpPlugin());
+	DirectoryManager::AppendPath("projects/Boxes/data/");
+ 	
+	// Setup logging facilities.
     // Create simple setup
     IEnvironment* env = new SDLEnvironment(800,600);
 
@@ -184,11 +159,9 @@ int main(int argc, char** argv) {
     // Print usage info.
     logger.info << "========= Running OpenEngine Test Project =========" << logger.end;
 
-    KeyActionMap map;
-    map.listenTo(setup->GetKeyboard());
-
     // root
     RenderStateNode *rsn = new RenderStateNode();
+    setup->GetRenderer().SetBackgroundColor(Vector<4,float>(0,0,1,1));
 
     // rsn->DisableOption(RenderStateNode::TEXTURE);
     rsn->EnableOption(RenderStateNode::COLOR_MATERIAL);
@@ -205,161 +178,70 @@ int main(int argc, char** argv) {
     Vector<3,float> middle = endPoint*0.5 + startPoint;
 
     // Physics engine
-    AABB world(middle,
-               Vector<3,float>(1000,1000,1000));
-
+    AABB world(middle, Vector<3,float>(1000,1000,1000));
     PhysicsFacade* phy = new PhysicsFacade(world, Vector<3,float>(0,-9.82,0));
-    HeightMapNode* hmapn = SetupTerrain(setup,phy);
 
-    MeshNode *mn = new MeshNode();
-    mn->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(10,1,Vector<3,float>(1,0,0),1));
-
-    MeshNode *mn2 = new MeshNode();
-    mn2->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(10,1,Vector<3,float>(1,0,0),1));
-
+	//Ground
+	MeshNode *groundMesh = new MeshNode();
+	groundMesh->SetMesh(OpenEngine::Utils::MeshCreator::CreatePlane(400));
     RigidBody* ground = new RigidBody(new AABB(Vector<3,float>(),
-                                               Vector<3,float>(100,1,100)));
+                                               Vector<3,float>(200,1,200)));
     ground->SetPosition(middle);
+	phy->AddRigidBody(ground);
 
-    RigidBody* b1 = new RigidBody(new AABB(Vector<3,float>(),
-                                           Vector<3,float>(5)));
+	TransformationNode* tn3 = ground->GetTransformationNode();
+    tn3->AddNode(groundMesh);
+    root->AddNode(tn3);
 
-    RigidBody* b2 = new RigidBody(new AABB(Vector<3,float>(),
-                                           Vector<3,float>(5)));
-
-    
-
-    DynamicBody* db = new DynamicBody(b1);
-    DynamicBody* db2 = new DynamicBody(b2);
-    db->SetPosition(middle + Vector<3,float>(0,10,0));
-    db2->SetPosition(middle + Vector<3,float>(5,40,5));
-    phy->AddRigidBody(db);
-    phy->AddRigidBody(db2);
-    //phy->AddRigidBody(ground);
-
-    TransformationNode* tn = b1->GetTransformationNode();
-    TransformationNode* tn2 = b2->GetTransformationNode();
-
-    tn->AddNode(mn);
-    tn2->AddNode(mn2);
-
-    setup->GetRenderer().SetBackgroundColor(Vector<4,float>(0,0,1,1));
-
-
-    root->AddNode(tn);
-    root->AddNode(tn2);
+	// Random ?
     root->AddNode(phy->getRenderNode(&(setup->GetRenderer())));
 
-
+	// Camera
     Camera* cam = setup->GetCamera();
-    cam->SetPosition(middle + Vector<3,float>(0,100,-100));
+    cam->SetPosition(middle + Vector<3,float>(0,250,-250));
     cam->LookAt(middle);
 
+	// Attach Physics engine
     setup->GetEngine().InitializeEvent().Attach(*phy);
     setup->GetEngine().ProcessEvent().Attach(*phy);
     setup->GetEngine().DeinitializeEvent().Attach(*phy);
 
-    // keyh
+    // Get autospawning boxes
     ActionHandler *hdl = new ActionHandler(root, phy, middle);
-    map.onKeyPress(KEY_n,
-                   *(new ActionCallback<ActionHandler,KeyArg>(hdl, &ActionHandler::NewBox)));
-    map.onKeyPress(KEY_a,
-                   *(new ActionCallback<ActionHandler,KeyArg>(hdl, &ActionHandler::ToggleAuto)));
     setup->GetEngine().ProcessEvent().Attach(*hdl);
 
-    // terrain
+	// Dragon
+	TransformationNode* duckTrans = new TransformationNode();
+    duckTrans->SetPosition(Vector<3, float>(200, 500, 200));
+    root->AddNode(duckTrans);
 
+    ISceneNode* duck = CreateDuck();
+    duckTrans->AddNode(duck);
+	
     // Light
     PointLightNode* pl = new PointLightNode();
     TransformationNode* plt = new TransformationNode();
     plt->AddNode(pl);
     plt->SetPosition(Vector<3,float>(0,1000,0));
     root->AddNode(plt);
-    // mouse tools
-	/*
-    MouseSelection* ms = new MouseSelection(setup->GetFrame(), setup->GetMouse(), NULL);
-    CameraTool* ct   = new CameraTool();
-    ToolChain* tc    = new ToolChain();
-    tc->PushBackTool(ct);
+    
+	// Camera Control
+    BetterMoveHandler *move = new BetterMoveHandler(*cam,
+                                                    setup->GetMouse(),
+                                                    true);
+    setup->GetEngine().InitializeEvent().Attach(*move);
+    setup->GetEngine().ProcessEvent().Attach(*move);
 
-    setup->GetRenderer().PostProcessEvent().Attach(*ms);
-    setup->GetMouse().MouseMovedEvent().Attach(*ms);
-    setup->GetMouse().MouseButtonEvent().Attach(*ms);
-    setup->GetKeyboard().KeyEvent().Attach(*ms);
-
-    ms->BindTool(&(setup->GetRenderer().GetViewport()), tc);
-	*/
-
+	setup->GetKeyboard().KeyEvent().Attach(*move);   
+	setup->GetMouse().MouseButtonEvent().Attach(*move);
+	setup->GetMouse().MouseMovedEvent().Attach(*move);
+	
+	// Show FPS
     setup->ShowFPS();
-
-
 
     // Start the engine.
     setup->GetEngine().Start();
 
     // Return when the engine stops.
     return EXIT_SUCCESS;
-}
-
-HeightMapNode* SetupTerrain(SimpleSetup* setup, PhysicsFacade* phy) {
-    //FloatTexture2DPtr map = FloatTexture2DPtr(new FloatTexture2D(193, 193, 1));    
-    FloatTexture2DPtr map = FloatTexture2DPtr(new FloatTexture2D(hmapsize[0], hmapsize[1], 1));
-    // //UCharTexture2DPtr map1 = ResourceManager<UCharTexture2D>::Create("Heightmap32.tga");
-    // //FloatTexture2DPtr map = ConvertTex(map1);
-    Empty(map);
-    // map = CreateSmoothTerrain(map, 50, 40, 200);
-
-
-    map = CreateSmoothTerrain(map, 1, 160, 300);
-    map = CreateSmoothTerrain(map, 25, 20, 60);
-    map = CreateSmoothTerrain(map, 125, 5, 40);
-    map = CreateSmoothTerrain(map, 250, 3, -6);
-    map = CreateSmoothTerrain(map, 625, 2, 3);
-    map = MakePlateau(map, 700, 30);
-
-
-    /*map = ValueNoise::Generate(hmapsize[0],
-                                hmapsize[1],
-                                512, 0.5, 1.0, 10, 1/4, 0);
-*/
-    //ValueNoise::Normalize(map, 0, 1024);
-
-    float widthScale = 16.0;
-
-    Vector<3, float> origo = Vector<3, float>(map->GetHeight() * widthScale / 2, 
-                                              0, 
-                                              map->GetWidth() * widthScale / 2);
-    Vector<3, float> sunDir = Vector<3, float>(1448, 2048, 1448);
-
-    HeightMapNode* node = new HeightMapNode(map);
-    node->SetWidthScale(widthScale);
-    //node->SetSun(sun);
-    setup->GetRenderer().InitializeEvent().Attach(*node);
-    setup->GetEngine().ProcessEvent().Attach(*node);
-    
-    setup->GetScene()->AddNode(node);
-    node->Load();
-
-    logger.info << hmapsize << logger.end;
-    logger.info << node->GetVerticeWidth() << logger.end;
-    logger.info << node->GetVerticeDepth() << logger.end;
-        
-    HeightfieldTerrainShape* hground = new HeightfieldTerrainShape(node->GetVertexBuffer(),
-                                                                   node->GetVerticeWidth(),
-                                                                   node->GetVerticeDepth(),
-                                                                   1000,
-                                                                   16,
-                                                                   1,
-                                                                   true,
-                                                                   true);
-    RigidBody* gnd = new RigidBody(hground);
-    gnd->SetRotation(Quaternion<float>(0,-PI/2,0));
-     gnd->SetPosition(Vector<3,float>(16*hmapsize[0]/2 - 16/2,
-                                      1000/2,
-                                      16*hmapsize[1]/2 - 16/2
-                                      ));
-
-    phy->AddRigidBody(gnd);
-
-    return node;
 }
