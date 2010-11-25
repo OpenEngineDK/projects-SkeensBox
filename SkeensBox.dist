@@ -15,20 +15,18 @@ dist /extensions/CairoResource/CairoResource.dist http://openengine.dk/code/exte
 dist /extensions/HeightMap/HeightMap.dist http://openengine.dk/code/extensions/HeightMap/HeightMap.dist
 dist /extensions/TexUtils/TexUtils.dist http://openengine.dk/code/extensions/TexUtils/TexUtils.dist
 dist /extensions/Assimp/Assimp.dist               http://www.openengine.dk/code/extensions/Assimp/Assimp.dist
-
+dist /extensions/RBPhysics/RBPhysics.dist               http://www.openengine.dk/code/extensions/RBPhysics/RBPhysics.dist
 
 # old style
 darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TGAResource
 darcs /extensions/MeshUtils              http://openengine.dk/code/extensions/MeshUtils
 darcs /extensions/OpenGLSelection        http://openengine.dk/code/extensions/OpenGLSelection
 darcs /extensions/GenericHandlers 	 http://openengine.dk/code/extensions/GenericHandlers
-darcs /extensions/RBPhysics              http://openengine.dk/code/extensions/RBPhysics
 
 darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
 darcs-dev /extensions/MeshUtils              fh.daimi.au.dk:/users/cgd/code/extensions/MeshUtils
 darcs-dev /extensions/OpenGLSelection              fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
 darcs-dev /extensions/GenericHandlers 	     fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
-darcs-dev /extensions/RBPhysics              fh.daimi.au.dk:/users/cgd/code/extensions/RBPhysics
 
 
 # Get data
