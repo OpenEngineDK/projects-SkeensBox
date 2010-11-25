@@ -1,10 +1,9 @@
 # Project name. Should be the same as the project directory name and
 # will become the name of the binary target.
-SET( PROJECT_NAME "Boxes")
+SET( PROJECT_NAME "SkeensBox")
 
 # Project source code list
 SET( PROJECT_SOURCES
-  # Add all the cpp source files here
   main.cpp
 )
 
