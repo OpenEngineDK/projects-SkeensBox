@@ -22,12 +22,15 @@ darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TG
 darcs /extensions/MeshUtils              http://openengine.dk/code/extensions/MeshUtils
 darcs /extensions/OpenGLSelection        http://openengine.dk/code/extensions/OpenGLSelection
 darcs /extensions/GenericHandlers 	 http://openengine.dk/code/extensions/GenericHandlers
+darcs /extensions/RBPhysics              http://openengine.dk/code/extensions/RBPhysics
 
 darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
 darcs-dev /extensions/MeshUtils              fh.daimi.au.dk:/users/cgd/code/extensions/MeshUtils
 darcs-dev /extensions/OpenGLSelection              fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
 darcs-dev /extensions/GenericHandlers 	     fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
+darcs-dev /extensions/RBPhysics              fh.daimi.au.dk:/users/cgd/code/extensions/RBPhysics
 
 
 # Get data
 any /projects/SkeensBox/data	http://www.openengine.dk/data/projects/SkeensBox/data.zip
+
