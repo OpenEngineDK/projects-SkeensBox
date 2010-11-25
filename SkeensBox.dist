@@ -23,3 +23,6 @@ darcs /extensions/OpenGLSelection        http://openengine.dk/code/extensions/Op
 darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
 darcs-dev /extensions/MeshUtils              fh.daimi.au.dk:/users/cgd/code/extensions/MeshUtils
 darcs-dev /extensions/OpenGLSelection              fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
+
+# Get data
+any /projects/SkeensBox/data	http://www.openengine.dk/data/projects/SkeensBox/data.zip
