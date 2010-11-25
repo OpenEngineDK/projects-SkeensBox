@@ -21,10 +21,13 @@ dist /extensions/Assimp/Assimp.dist               http://www.openengine.dk/code/
 darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TGAResource
 darcs /extensions/MeshUtils              http://openengine.dk/code/extensions/MeshUtils
 darcs /extensions/OpenGLSelection        http://openengine.dk/code/extensions/OpenGLSelection
+darcs /extensions/GenericHandlers 	 http://openengine.dk/code/extensions/GenericHandlers
 
 darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
 darcs-dev /extensions/MeshUtils              fh.daimi.au.dk:/users/cgd/code/extensions/MeshUtils
 darcs-dev /extensions/OpenGLSelection              fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
+darcs-dev /extensions/GenericHandlers 	     fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
+
 
 # Get data
 any /projects/SkeensBox/data	http://www.openengine.dk/data/projects/SkeensBox/data.zip
