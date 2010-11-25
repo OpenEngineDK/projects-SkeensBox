@@ -147,7 +147,7 @@ int main(int argc, char** argv)
 {
     ResourceManager<UCharTexture2D>::AddPlugin(new UCharSDLImagePlugin());
     ResourceManager<IModelResource>::AddPlugin(new AssimpPlugin());
-	DirectoryManager::AppendPath("projects/Boxes/data/");
+	DirectoryManager::AppendPath("projects/SkeensBox/data/");
  	
 	// Setup logging facilities.
     // Create simple setup
