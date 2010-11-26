@@ -8,9 +8,10 @@
 //--------------------------------------------------------------------
 
 // 
-// No time for Havoc! - Its time for bullet(s)
+// No time for Havok! - Its time for bullet(s)
 // This engine is like unreal! *TEARS THE ENGINE APART* now its open engine
-// 
+// Oh lolololol >.<
+//
 
 // OpenEngine stuff
 #include <Meta/Config.h>
@@ -22,8 +23,8 @@
 #include <Physics/RigidBody.h>
 #include <Physics/DynamicBody.h>
 
+#include <Geometry/TriangleMesh.h>
 #include <Geometry/AABB.h>
-#include <Geometry/HeightfieldTerrainShape.h>
 
 #include <Scene/MeshNode.h>
 #include <Scene/SceneNode.h>
@@ -101,7 +102,7 @@ public:
 
     void Handle (OpenEngine::Core::ProcessEventArg arg)
 	{
-        if((dropTimer.GetElapsedTime().AsInt()) >= 30000)
+        if((dropTimer.GetElapsedTime().AsInt()) >= 20000)
 		{
             dropTimer.Reset();
             DropBox();
@@ -110,9 +111,9 @@ public:
 
     void DropBox()
 	{
-        const float boxSize = 10;        
+        const float boxSize = 2.5f;        
         float mass = rg->UniformFloat(100, 500);
-        logger.info << "Box: " << mass << logger.end;
+        //logger.info << "Box: " << mass << logger.end;
 
         MeshNode *mn = new MeshNode();
         mn->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(boxSize*2,1,RandomVector(rg, Vector<3,float>(), Vector<3,float>(1)),1));
@@ -120,8 +121,8 @@ public:
                                                  Vector<3,float>(boxSize)));
         DynamicBody* db = new DynamicBody(body);
         db->SetPosition(start + RandomVector(rg,
-                                             Vector<3,float>(-10,20,-10)*boxSize,
-                                             Vector<3,float>(10,40,10)*boxSize));
+                                             Vector<3,float>(-15,40,-15)*2*boxSize,
+                                             Vector<3,float>(15,60,15)*2*boxSize));
         db->SetMass(mass);
         phy->AddRigidBody(db);
 
@@ -133,8 +134,9 @@ public:
 
 ISceneNode* CreateDuck()
 {
+    //IModelResourcePtr duckRes = ResourceManager<IModelResource>::Create("duck/duck.dae");
     IModelResourcePtr duckRes = ResourceManager<IModelResource>::Create("duck/duck.dae");
-    duckRes->Load();
+	duckRes->Load();
 	
 	ISceneNode *duck = duckRes->GetSceneNode();
 
@@ -182,9 +184,9 @@ int main(int argc, char** argv)
 
 	//Ground
 	MeshNode *groundMesh = new MeshNode();
-	groundMesh->SetMesh(OpenEngine::Utils::MeshCreator::CreatePlane(400));
+	groundMesh->SetMesh(OpenEngine::Utils::MeshCreator::CreatePlane(800));
     RigidBody* ground = new RigidBody(new AABB(Vector<3,float>(),
-                                               Vector<3,float>(200,1,200)));
+                                               Vector<3,float>(400,1,400)));
     ground->SetPosition(middle);
 	phy->AddRigidBody(ground);
 
@@ -209,15 +211,17 @@ int main(int argc, char** argv)
     ActionHandler *hdl = new ActionHandler(root, phy, middle);
     setup->GetEngine().ProcessEvent().Attach(*hdl);
 
-	// Dragon
-	TransformationNode* duckTrans = new TransformationNode();
-    duckTrans->SetPosition(Vector<3, float>(200, 500, 200));
-    root->AddNode(duckTrans);
-
-    ISceneNode* duck = CreateDuck();
-    duckTrans->AddNode(duck);
+	// Duck
+	ISceneNode *duckNode = CreateDuck();
+	RigidBody* duck = new RigidBody(new TriangleMesh(duckNode));
+	duck->SetPosition(middle);
+	phy->AddRigidBody(duck);
 	
-    // Light
+	TransformationNode* duckTrans = duck->GetTransformationNode();
+	duckTrans->AddNode(duckNode);
+	root->AddNode(duckTrans);
+    
+	// Light
     PointLightNode* pl = new PointLightNode();
     TransformationNode* plt = new TransformationNode();
     plt->AddNode(pl);
