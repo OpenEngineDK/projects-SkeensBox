@@ -82,6 +82,24 @@ Vector<3,float> RandomVector(RandomGenerator* rg,
                            rg->UniformFloat(min[2],max[2]));
 }
 
+
+
+ISceneNode* CreateRes(char* ResourcePath)
+{
+    //IModelResourcePtr Res = ResourceManager<IModelResource>::Create("duck/duck.dae");
+    //IModelResourcePtr Res = ResourceManager<IModelResource>::Create("sphere/sphere.dae");
+    //IModelResourcePtr Res = ResourceManager<IModelResource>::Create("dice/dice.dae");
+    //IModelResourcePtr Res = ResourceManager<IModelResource>::Create("collada/collada.dae");
+    IModelResourcePtr Res = ResourceManager<IModelResource>::Create(ResourcePath);
+	Res->Load();
+	
+	ISceneNode *ResSceneNode = Res->GetSceneNode();
+
+    Res->Unload();
+	return ResSceneNode;
+}
+
+
 class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg>
 {
     ISceneNode* root;
@@ -102,7 +120,7 @@ public:
 
     void Handle (OpenEngine::Core::ProcessEventArg arg)
 	{
-        if((dropTimer.GetElapsedTime().AsInt()) >= 20000)
+        if((dropTimer.GetElapsedTime().AsInt()) >= 100000)
 		{
             dropTimer.Reset();
             DropBox();
@@ -115,35 +133,20 @@ public:
         float mass = rg->UniformFloat(100, 500);
         //logger.info << "Box: " << mass << logger.end;
 
-        MeshNode *mn = new MeshNode();
-        mn->SetMesh(OpenEngine::Utils::MeshCreator::CreateCube(boxSize*2,1,RandomVector(rg, Vector<3,float>(), Vector<3,float>(1)),1));
-		RigidBody* body = new RigidBody(new AABB(Vector<3,float>(),
-                                                 Vector<3,float>(boxSize)));
-        DynamicBody* db = new DynamicBody(body);
+        ISceneNode *sphereNode = CreateRes("sphere/sphere.dae");
+        RigidBody* rb = new RigidBody(new TriangleMesh(sphereNode));
+        DynamicBody* db = new DynamicBody(rb);
         db->SetPosition(start + RandomVector(rg,
                                              Vector<3,float>(-15,40,-15)*2*boxSize,
                                              Vector<3,float>(15,60,15)*2*boxSize));
         db->SetMass(mass);
         phy->AddRigidBody(db);
-
-        TransformationNode* tn = body->GetTransformationNode();
-        tn->AddNode(mn);
-        root->AddNode(tn);
+        
+        TransformationNode* duckTrans = rb->GetTransformationNode();
+        duckTrans->AddNode(sphereNode);
+        root->AddNode(duckTrans);
     }
 };
-
-ISceneNode* CreateDuck()
-{
-    //IModelResourcePtr duckRes = ResourceManager<IModelResource>::Create("duck/duck.dae");
-    IModelResourcePtr duckRes = ResourceManager<IModelResource>::Create("duck/duck.dae");
-	duckRes->Load();
-	
-	ISceneNode *duck = duckRes->GetSceneNode();
-
-    duckRes->Unload();
-	return duck;
-}
-
 
 int main(int argc, char** argv)
 {
@@ -212,11 +215,10 @@ int main(int argc, char** argv)
     setup->GetEngine().ProcessEvent().Attach(*hdl);
 
 	// Duck
-	ISceneNode *duckNode = CreateDuck();
+	ISceneNode *duckNode = CreateRes("duck/duck.dae");
 	RigidBody* duck = new RigidBody(new TriangleMesh(duckNode));
 	duck->SetPosition(middle);
 	phy->AddRigidBody(duck);
-	
 	TransformationNode* duckTrans = duck->GetTransformationNode();
 	duckTrans->AddNode(duckNode);
 	root->AddNode(duckTrans);
