@@ -124,7 +124,7 @@ public:
 
     void Handle (OpenEngine::Core::ProcessEventArg arg)
 	{
-        if((dropTimer.GetElapsedTime().AsInt()) >= 100000)
+        if((dropTimer.GetElapsedTime().AsInt()) >= 30000)
 		{
             dropTimer.Reset();
             DropBox();

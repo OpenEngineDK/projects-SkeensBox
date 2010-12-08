@@ -29,5 +29,6 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
   Extensions_OpenGLSelection
   Extensions_GenericHandlers
   Extensions_AssimpResource
+  Extensions_BagContainer
 )
 
