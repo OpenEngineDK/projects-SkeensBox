@@ -16,6 +16,7 @@ dist /extensions/HeightMap/HeightMap.dist http://openengine.dk/code/extensions/H
 dist /extensions/TexUtils/TexUtils.dist http://openengine.dk/code/extensions/TexUtils/TexUtils.dist
 dist /extensions/Assimp/Assimp.dist               http://www.openengine.dk/code/extensions/Assimp/Assimp.dist
 dist /extensions/RBPhysics/RBPhysics.dist               http://www.openengine.dk/code/extensions/RBPhysics/RBPhysics.dist
+dist /extensions/BagContainer/BagContainer.dist http://openengine.dk/code/extensions/BagContainer/BagContainer.dist
 
 # old style
 darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TGAResource
