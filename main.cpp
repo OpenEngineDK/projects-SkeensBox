@@ -24,6 +24,7 @@
 #include <Physics/DynamicBody.h>
 
 #include <Geometry/TriangleMesh.h>
+#include <Geometry/BoundingSphere.h>
 #include <Geometry/AABB.h>
 
 #include <Scene/MeshNode.h>
@@ -55,6 +56,8 @@
 
 #include <Resources/ResourceManager.h>
 #include <Resources/SDLImage.h>
+
+#include <vector>
 
 using namespace OpenEngine::Logging;
 using namespace OpenEngine::Core;
@@ -107,6 +110,8 @@ class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg>
     Vector<3,float> start;
     RandomGenerator* rg;
     Timer dropTimer;
+    std::vector<DynamicBody*> array;
+    std::vector<TransformationNode*> array2;
 public:
     ActionHandler(ISceneNode* root,
                   PhysicsFacade* phy,
@@ -129,22 +134,38 @@ public:
 
     void DropBox()
 	{
-        const float boxSize = 2.5f;        
+        const float sphereSize = 2.5f;        
         float mass = rg->UniformFloat(100, 500);
         //logger.info << "Box: " << mass << logger.end;
 
-        ISceneNode *sphereNode = CreateRes("sphere/sphere.dae");
-        RigidBody* rb = new RigidBody(new TriangleMesh(sphereNode));
+        MeshNode *mesh = new MeshNode();
+        mesh->SetMesh(OpenEngine::Utils::MeshCreator::CreateSphere(sphereSize));
+        RigidBody* rb = new RigidBody(new BoundingSphere(Vector<3,float>(0,0,0), sphereSize*2));
         DynamicBody* db = new DynamicBody(rb);
         db->SetPosition(start + RandomVector(rg,
-                                             Vector<3,float>(-15,40,-15)*2*boxSize,
-                                             Vector<3,float>(15,60,15)*2*boxSize));
+                                             Vector<3,float>(-15,40,-15)*2*sphereSize,
+                                             Vector<3,float>(15,60,15)*2*sphereSize));
         db->SetMass(mass);
         phy->AddRigidBody(db);
         
         TransformationNode* duckTrans = rb->GetTransformationNode();
-        duckTrans->AddNode(sphereNode);
+        duckTrans->AddNode(mesh);
         root->AddNode(duckTrans);
+
+        array.push_back(db);
+        array2.push_back(duckTrans);
+        for(unsigned int x=0; x<array.size(); x++)
+        {
+            Vector<3,float> a = (array[x])->GetPosition();
+            if(a[1]<0)
+            {
+                phy->RemoveRigidBody(array[x]);
+                array.erase(array.begin() + x);
+                root->RemoveNode(array2[x]);
+                array2.erase(array2.begin() + x);
+                x--;
+            }
+        }
     }
 };
 
