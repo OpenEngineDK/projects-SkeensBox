@@ -48,6 +48,7 @@
 #include <Utils/TerrainTexUtils.h>
 #include <Utils/MeshCreator.h>
 #include <Utils/BetterMoveHandler.h>
+#include <Utils/Bag.h>
 
 #include <Display/Camera.h>
 #include <Display/SDLEnvironment.h>
@@ -56,8 +57,6 @@
 
 #include <Resources/ResourceManager.h>
 #include <Resources/SDLImage.h>
-
-#include <vector>
 
 using namespace OpenEngine::Logging;
 using namespace OpenEngine::Core;
@@ -110,8 +109,8 @@ class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg>
     Vector<3,float> start;
     RandomGenerator* rg;
     Timer dropTimer;
-    std::vector<DynamicBody*> array;
-    std::vector<TransformationNode*> array2;
+    Bag<DynamicBody*> array;
+    Bag<TransformationNode*> array2;
 public:
     ActionHandler(ISceneNode* root,
                   PhysicsFacade* phy,
