@@ -201,7 +201,7 @@ int main(int argc, char** argv)
     // Create simple setup
     IEnvironment* env = new SDLEnvironment(800,600);
 
-    SimpleSetup* setup = new SimpleSetup("Boxiii", env);
+    SimpleSetup* setup = new SimpleSetup("SkeensBox", env);
 
     // Print usage info.
     logger.info << "========= Running OpenEngine Test Project =========" << logger.end;
