@@ -11,7 +11,6 @@
 // No time for Havok! - Its time for bullet(s)
 // This engine is like unreal! *TEARS THE ENGINE APART* now its open engine
 // Oh lolololol >.<
-//
 
 // OpenEngine stuff
 #include <Meta/Config.h>
@@ -101,6 +100,13 @@ ISceneNode* CreateRes(char* ResourcePath)
 	return ResSceneNode;
 }
 
+    typedef struct
+    {
+        MeshNode *mesh;
+        BoundingSphere *sphere;
+        RigidBody* rb;
+        DynamicBody* db;
+    } Dealloc;
 
 class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg>
 {
@@ -109,8 +115,8 @@ class ActionHandler : public IListener<OpenEngine::Core::ProcessEventArg>
     Vector<3,float> start;
     RandomGenerator* rg;
     Timer dropTimer;
-    Bag<DynamicBody*> array;
-    Bag<TransformationNode*> array2;
+    //Needed for dealloc
+    Bag<pair<pair<DynamicBody*, TransformationNode*>, Dealloc* > > array;
 public:
     ActionHandler(ISceneNode* root,
                   PhysicsFacade* phy,
@@ -124,7 +130,7 @@ public:
 
     void Handle (OpenEngine::Core::ProcessEventArg arg)
 	{
-        if((dropTimer.GetElapsedTime().AsInt()) >= 30000)
+        if((dropTimer.GetElapsedTime().AsInt()) >= 10000)
 		{
             dropTimer.Reset();
             DropBox();
@@ -139,10 +145,11 @@ public:
 
         MeshNode *mesh = new MeshNode();
         mesh->SetMesh(OpenEngine::Utils::MeshCreator::CreateSphere(sphereSize));
-        RigidBody* rb = new RigidBody(new BoundingSphere(Vector<3,float>(0,0,0), sphereSize*2));
+        BoundingSphere *sphere = new BoundingSphere(Vector<3,float>(0,0,0), sphereSize*2);
+        RigidBody* rb = new RigidBody(sphere);
         DynamicBody* db = new DynamicBody(rb);
         db->SetPosition(start + RandomVector(rg,
-                                             Vector<3,float>(-15,40,-15)*2*sphereSize,
+                                             Vector<3,float>(-15,30,-15)*2*sphereSize,
                                              Vector<3,float>(15,60,15)*2*sphereSize));
         db->SetMass(mass);
         phy->AddRigidBody(db);
@@ -151,20 +158,36 @@ public:
         duckTrans->AddNode(mesh);
         root->AddNode(duckTrans);
 
-        array.push_back(db);
-        array2.push_back(duckTrans);
+        Dealloc *dealloc = new Dealloc();
+        dealloc->mesh=mesh;
+        dealloc->sphere=sphere;
+        dealloc->rb=rb;
+        dealloc->db=db;
+
+        array.push_back(make_pair(make_pair(db, duckTrans), dealloc));
         for(unsigned int x=0; x<array.size(); x++)
         {
-            Vector<3,float> a = (array[x])->GetPosition();
+            Vector<3,float> a = (array[x].first.first)->GetPosition();
+            //Element should be deleted if y<0
             if(a[1]<0)
             {
-                phy->RemoveRigidBody(array[x]);
+                // Unregister
+                phy->RemoveRigidBody(array[x].first.first);
+                root->RemoveNode(array[x].first.second);
+                // Clean up (delete all pointers in dealloc)
+                Dealloc *dealloc = array[x].second;
+                // Remove
                 array.erase(array.begin() + x);
-                root->RemoveNode(array2[x]);
-                array2.erase(array2.begin() + x);
+                // Dealloc
+                delete dealloc->db;
+                delete dealloc->rb;
+                delete dealloc->sphere;
+                //delete dealloc->mesh;
+                delete dealloc; //delete dealloc itself
                 x--;
             }
         }
+        logger.info << array.size() << logger.end;
     }
 };
 
@@ -217,12 +240,12 @@ int main(int argc, char** argv)
     tn3->AddNode(groundMesh);
     root->AddNode(tn3);
 
-	// Random ?
-    root->AddNode(phy->getRenderNode(&(setup->GetRenderer())));
+	// DEBUG DRAW
+    //root->AddNode(phy->getRenderNode(&(setup->GetRenderer())));
 
 	// Camera
     Camera* cam = setup->GetCamera();
-    cam->SetPosition(middle + Vector<3,float>(0,250,-250));
+    cam->SetPosition(middle + Vector<3,float>(0,500,-500));
     cam->LookAt(middle);
 
 	// Attach Physics engine
@@ -235,14 +258,14 @@ int main(int argc, char** argv)
     setup->GetEngine().ProcessEvent().Attach(*hdl);
 
 	// Duck
-	ISceneNode *duckNode = CreateRes("duck/duck.dae");
+    ISceneNode *duckNode = CreateRes("duck/duck.dae");
 	RigidBody* duck = new RigidBody(new TriangleMesh(duckNode));
 	duck->SetPosition(middle);
 	phy->AddRigidBody(duck);
 	TransformationNode* duckTrans = duck->GetTransformationNode();
 	duckTrans->AddNode(duckNode);
 	root->AddNode(duckTrans);
-    
+
 	// Light
     PointLightNode* pl = new PointLightNode();
     TransformationNode* plt = new TransformationNode();
