@@ -1,26 +1,26 @@
 # main repository
-darcs / http://openengine.dk/code/openengine
-darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
+git / https://github.com/OpenEngineDK/openengine.git
+git-dev / git@github.com:OpenEngineDK/openengine.git
 
 # project repository
 # (uncomment the following two lines after uploading your project)
-darcs /projects/SkeensBox http://openengine.dk/code/projects/SkeensBox
-darcs-dev /projects/SkeensBox fh.daimi.au.dk:/users/cgd/code/projects/SkeensBox
+git /projects/SkeensBox https://github.com/OpenEngineDK/projects-SkeensBox.git
+git-dev /projects/SkeensBox git@github.com:OpenEngineDK/projects-SkeensBox.git
 
 # required extensions
 # dist style
-dist /extensions/ActionMappers/ActionMappers.dist http://openengine.dk/code/extensions/ActionMappers/ActionMappers.dist
-dist /extensions/SetupHelpers/SetupHelpers.dist http://openengine.dk/code/extensions/SetupHelpers/SetupHelpers.dist
-dist /extensions/CairoResource/CairoResource.dist http://openengine.dk/code/extensions/CairoResource/CairoResource.dist
-dist /extensions/HeightMap/HeightMap.dist http://openengine.dk/code/extensions/HeightMap/HeightMap.dist
-dist /extensions/TexUtils/TexUtils.dist http://openengine.dk/code/extensions/TexUtils/TexUtils.dist
-dist /extensions/Assimp/Assimp.dist               http://www.openengine.dk/code/extensions/Assimp/Assimp.dist
-dist /extensions/RBPhysics/RBPhysics.dist               http://www.openengine.dk/code/extensions/RBPhysics/RBPhysics.dist
-dist /extensions/BagContainer/BagContainer.dist http://openengine.dk/code/extensions/BagContainer/BagContainer.dist
-dist /extensions/TGAResource/TGAResource.dist http://openengine.dk/code/extensions/TGAResource/TGAResource.dist
-dist /extensions/MeshUtils/MeshUtils.dist http://openengine.dk/code/extensions/MeshUtils/MeshUtils.dist
-dist /extensions/OpenGLSelection/OpenGLSelection.dist http://openengine.dk/code/extensions/OpenGLSelection/OpenGLSelection.dist
-dist /extensions/GenericHandlers/GenericHandlers.dist http://openengine.dk/code/extensions/GenericHandlers/GenericHandlers.dist
+dist /extensions/ActionMappers/ActionMappers.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-ActionMappers/master/ActionMappers.dist
+dist /extensions/SetupHelpers/SetupHelpers.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-SetupHelpers/master/SetupHelpers.dist
+dist /extensions/CairoResource/CairoResource.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-CairoResource/master/CairoResource.dist
+dist /extensions/HeightMap/HeightMap.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-HeightMap/master/HeightMap.dist
+dist /extensions/TexUtils/TexUtils.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-TexUtils/master/TexUtils.dist
+dist /extensions/Assimp/Assimp.dist               https://raw.githubusercontent.com/OpenEngineDK/extensions-Assimp/master/Assimp.dist
+dist /extensions/RBPhysics/RBPhysics.dist               https://raw.githubusercontent.com/OpenEngineDK/extensions-RBPhysics/master/RBPhysics.dist
+dist /extensions/BagContainer/BagContainer.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-BagContainer/master/BagContainer.dist
+dist /extensions/TGAResource/TGAResource.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-TGAResource/master/TGAResource.dist
+dist /extensions/MeshUtils/MeshUtils.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-MeshUtils/master/MeshUtils.dist
+dist /extensions/OpenGLSelection/OpenGLSelection.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-OpenGLSelection/master/OpenGLSelection.dist
+dist /extensions/GenericHandlers/GenericHandlers.dist https://raw.githubusercontent.com/OpenEngineDK/extensions-GenericHandlers/master/GenericHandlers.dist
 
 # Get data
 any /projects/SkeensBox/data	http://www.openengine.dk/data/projects/SkeensBox/data.zip
